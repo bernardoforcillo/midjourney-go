@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/bernardoforcillo/midjourney-go/discord"
 )
 
 type UpscaleRequest struct {
@@ -19,7 +21,7 @@ type UpscaleRequest struct {
 
 func (c *Client) Upscale(ctx context.Context, upscaleReq *UpscaleRequest) error {
 	flags := 0
-	interactionsReq := &InteractionsRequest{
+	interactionsReq := &discord.InteractionRequest{
 		Type:          3,
 		ApplicationID: ApplicationID,
 		GuildID:       upscaleReq.GuildID,
@@ -35,7 +37,7 @@ func (c *Client) Upscale(ctx context.Context, upscaleReq *UpscaleRequest) error 
 
 	b, _ := json.Marshal(interactionsReq)
 
-	url := "https://discord.com/api/v9/interactions"
+	url := "https://discord.com/api/v10/interactions"
 	req, err := http.NewRequest("POST", url, bytes.NewReader(b))
 	if err != nil {
 		return fmt.Errorf("Call http.NewRequest failed, err: %w", err)

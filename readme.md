@@ -1,14 +1,12 @@
-List
-====
+# A Golang SDK for managing Midjourney through Discord API.
 
-* [midjourney-go](#midjourney-go)
-* [installation](#installation)
-* [simple usage](#simple-usage)
-* [features](#features)
-* [license](#license)
-* [changelog](#changelog)
+The `midjourney-go` package provides a Golang SDK for managing Midjourney through Discord API. It is in development.
 
-# midjourney-go #
+## License ##
+
+This project is licensed under the MIT license. See the [license.md](license.md) file for more details.
+
+---
 
 midjourney-go is a Go client library for accessing the [Midjourney-Bot API](https://midjourney.com/).
 
@@ -75,23 +73,5 @@ Currently, only some [commands](https://docs.midjourney.com/docs/command-list) h
 - [ ] /blend
 
 - [ ] /reroll
-
-[List](#list)
-
-## License ##
-
-This library is distributed under the BSD-style license found in the [LICENSE](./LICENSE)
-file.
-
-[List](#list)
-
-## Changelog ##
-
-> ## v0.0.1 (20/06/2023)
-> - Complete the basic functions
->   * Support for `Imagine` api
->   * Support for `Upscale` api
->   * Support for `Variation` api
->   * Support for `Describe` api
 
 [List](#list)

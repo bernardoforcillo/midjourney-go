@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+
+	"github.com/bernardoforcillo/midjourney-go/discord"
 )
 
 type VariationRequest struct {
@@ -18,7 +20,7 @@ type VariationRequest struct {
 
 func (c *Client) Variation(ctx context.Context, variationReq *VariationRequest) error {
 	flags := 0
-	interactionsReq := &InteractionsRequest{
+	interactionsReq := &discord.InteractionRequest{
 		Type:          3,
 		ApplicationID: ApplicationID,
 		GuildID:       variationReq.GuildID,
@@ -34,7 +36,7 @@ func (c *Client) Variation(ctx context.Context, variationReq *VariationRequest) 
 
 	b, _ := json.Marshal(interactionsReq)
 
-	url := "https://discord.com/api/v9/interactions"
+	url := "https://discord.com/api/v10/interactions"
 	req, err := http.NewRequest("POST", url, bytes.NewReader(b))
 	if err != nil {
 		return fmt.Errorf("Call http.NewRequest failed, err: %w", err)

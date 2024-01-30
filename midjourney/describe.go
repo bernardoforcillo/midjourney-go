@@ -5,11 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"path"
 	"strings"
+
+	"github.com/bernardoforcillo/midjourney-go/discord"
 )
 
 type DescribeRequest struct {
@@ -29,7 +31,7 @@ func downloadImage(ctx context.Context, url string) ([]byte, error) {
 
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("Call ioutil.ReadAll failed, err: %+v", err)
 	}
@@ -69,7 +71,7 @@ func (c *Client) Describe(ctx context.Context, describeReq *DescribeRequest) err
 		return fmt.Errorf("Call c.AttachmentsAndUpload failed, err: %w", err)
 	}
 
-	interactionsReq := &InteractionsRequest{
+	interactionsReq := &discord.InteractionRequest{
 		Type:          2,
 		ApplicationID: ApplicationID,
 		GuildID:       describeReq.GuildID,
@@ -115,7 +117,7 @@ func (c *Client) Describe(ctx context.Context, describeReq *DescribeRequest) err
 
 	b, _ := json.Marshal(interactionsReq)
 
-	url_ := "https://discord.com/api/v9/interactions"
+	url_ := "https://discord.com/api/v10/interactions"
 	req, err := http.NewRequest("POST", url_, bytes.NewReader(b))
 	if err != nil {
 		return fmt.Errorf("Call http.NewRequest failed, err: %w", err)

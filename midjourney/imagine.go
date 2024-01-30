@@ -5,17 +5,22 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
 	"net/http"
+
+	"github.com/bernardoforcillo/midjourney-go/discord"
 )
 
 type ImagineRequest struct {
 	GuildID   string `json:"guild_id"`
 	ChannelID string `json:"channel_id"`
 	Prompt    string `json:"prompt"`
+	MessageID string `json:"message_id"`
 }
 
 func (c *Client) Imagine(ctx context.Context, imgReq *ImagineRequest) error {
-	interactionsReq := &InteractionsRequest{
+	interactionsReq := &discord.InteractionRequest{
 		Type:          2,
 		ApplicationID: ApplicationID,
 		GuildID:       imgReq.GuildID,
@@ -56,7 +61,7 @@ func (c *Client) Imagine(ctx context.Context, imgReq *ImagineRequest) error {
 			},
 		},
 	}
-
+	
 	b, _ := json.Marshal(interactionsReq)
 
 	url := "https://discord.com/api/v9/interactions"
@@ -79,5 +84,11 @@ func (c *Client) Imagine(ctx context.Context, imgReq *ImagineRequest) error {
 		return fmt.Errorf("Call checkResponse failed, err: %w", err)
 	}
 
+	var body []byte
+	body, err = io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("call ioutil.ReadAll failed, err: %w", err)
+	}
+	log.Println(string(body))
 	return nil
 }

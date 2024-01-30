@@ -1,3 +1,3 @@
-module github.com/hongliang5316/midjourney-go
+module github.com/bernardoforcillo/midjourney-go
 
-go 1.19
+go 1.21
