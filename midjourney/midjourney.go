@@ -19,7 +19,7 @@ type MidjourneyClient struct {
 	channelID string
 }
 
-func New(authToken string, channelID string) *MidjourneyClient {
+func NewMidjourneyClient(authToken string, channelID string) *MidjourneyClient {
 	client := discord.NewClient(authToken)
 	return &MidjourneyClient{
 		client:    *client,

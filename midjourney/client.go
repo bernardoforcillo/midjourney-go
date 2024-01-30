@@ -27,6 +27,5 @@ func checkResponse(resp *http.Response) error {
 
 		return fmt.Errorf("resp.StatusCode: %d, body: %s", resp.StatusCode, string(body))
 	}
-
 	return nil
 }

@@ -92,4 +92,3 @@ func unMarshal[T any](body []byte) (*T, error) {
 	}
 	return &t, nil
 }
-

@@ -34,5 +34,15 @@ This code rewrite lays the groundwork for easier maintenance and reduces couplin
 - Changed module name from `hongliang5316/midjourney-go` to `bernardoforcillo/midjourney-go`
 - Changed go version from `1.19` to `1.21`
 
+## [0.1.1] - 2024-01-31
+
+Code refator, cleanup and documentation.
+
+### Changed
+
+- Changed for deprecation of `ioutil` to `io`
+- Changed `midjourney.New` to `midjourney.NewMidjourneyClient`
 
 ### Removed
+
+- Removed reimplementation of `hongliang5316`'s `upscale` and `imagine` APIs from `midjourney-go` (`upscale` and `imagine` are now part of `MidjourneyClient` API).

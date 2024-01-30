@@ -33,28 +33,21 @@ func (c *Client) Variation(ctx context.Context, variationReq *VariationRequest) 
 			"custom_id":      fmt.Sprintf("MJ::JOB::variation::%d::%s", variationReq.Index, variationReq.MessageHash),
 		},
 	}
-
 	b, _ := json.Marshal(interactionsReq)
-
 	url := "https://discord.com/api/v10/interactions"
 	req, err := http.NewRequest("POST", url, bytes.NewReader(b))
 	if err != nil {
 		return fmt.Errorf("Call http.NewRequest failed, err: %w", err)
 	}
-
 	req.Header.Set("Authorization", c.Config.UserToken)
 	req.Header.Set("Content-Type", "application/json")
-
 	resp, err := c.Do(req)
 	if err != nil {
 		return fmt.Errorf("Call c.Do failed, err: %w", err)
 	}
-
 	defer resp.Body.Close()
-
 	if err := checkResponse(resp); err != nil {
 		return fmt.Errorf("Call checkResponse failed, err: %w", err)
 	}
-
 	return nil
 }

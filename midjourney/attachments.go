@@ -5,7 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
@@ -98,7 +98,7 @@ func (c *Client) Attachments(ctx context.Context, attachmentsReq *AttachmentsReq
 		return nil, fmt.Errorf("Call checkResponse failed, err: %w", err)
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("Call ioutil.ReadAll failed, err: %w", err)
 	}

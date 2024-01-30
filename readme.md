@@ -2,7 +2,52 @@
 
 The `midjourney-go` package provides a Golang SDK for managing Midjourney through Discord API. It is in development.
 
-## License ##
+## Installation
+
+```bash
+go get github.com/bernardoforcillo/midjourney-go
+```
+
+## Usage
+
+For use in your project, add the `midjourney-go` package to your project. As follows:
+
+```go
+import "github.com/bernardoforcillo/midjourney-go/midjourney"
+```
+
+### How to initialize a client
+
+```go
+client := midjourney.NewMidjourneyClient("your token", "channel id")
+
+```
+
+### How to generate an image
+
+The `Imagine` command is used to generate an image. It takes two arguments: a string wich is the prompt for the image, and a boolean which force the execution to wait until the image is generated.
+
+```go
+generatedImage, err := client.Imagine("prompt", waitUntilGenerated)
+if err != nil {
+    log.Fatalf("call client.Imagine failed, err: %+v", err)
+}
+```
+
+### How to upscale an image
+
+The `Upscale` command is used to upscale an image. It takes two arguments: the index of the image to upscale, the index must be between 0 (included) and 4(excluded). and a boolean which force the execution to wait until the image is generated.
+
+```go
+upscaledImage, err := generatedImage.Upscale(index, true)
+if err != nil {
+	log.Fatalf("call.Upscale failed, err: %+v", err)
+}
+```
+
+`SearchMesssageWithContent` and `SearchMesssageByPrompt` are two utility functions
+that can be used to search for messages in a channel.
+## License
 
 This project is licensed under the MIT license. See the [license.md](license.md) file for more details.
 
