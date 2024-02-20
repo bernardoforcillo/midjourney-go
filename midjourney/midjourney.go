@@ -78,7 +78,7 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(8 * time.Second)
+		time.Sleep(4 * time.Second)
 		var txtmessage string
 		for txtmessage != "fast" {
 			msx, err := c.SearchMesssageByPrompt(prompt)
@@ -115,11 +115,15 @@ func (c MidjourneyClient) SearchMesssageByPrompt(prompt string) (discord.Message
 	}
 	var split []string
 	var result discord.Message
+	regex := regexp.MustCompile(`\s*--v\s+\d+(\.\d+)?\s*`)
 	for _, message := range *messages {
 		split = strings.Split(message.Content, "**")
-		if len(split) > 0 && split[1] == prompt {
-			result = message
-			break
+		if len(split) == 3 {
+			output := regex.ReplaceAllString(split[1], "")
+			if output == prompt {
+				result = message
+				break
+			}
 		}
 	}
 	return result, nil
@@ -176,7 +180,7 @@ func (g *GeneratedImage) Upscale(index int, waitUntilGenerated bool) (*UpscaledI
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(5 * time.Second)
+		time.Sleep(4 * time.Second)
 	}
 	prompt := strings.Split(g.message.Content, "**")[1]
 	result, err := g.mj.SearchMesssageWithContent(fmt.Sprintf("**%s** - Image #%d", prompt, index+1))

@@ -54,7 +54,15 @@ Code refator, cleanup and documentation.
 ### Changed
 
 - added more time in the generation process for `Imagine` and `Upscale`
+
 ## [0.1.3] - 2024-02-20
 
 Code improvement.
 
+## [0.1.4] - 2024-02-20
+
+Fix search message by prompt
+
+### Fixed
+
+- modified `SearchMesssageByPrompt` to search new version of the default prompt used by Midjourney
