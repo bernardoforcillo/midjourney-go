@@ -3,7 +3,6 @@ package discord
 import (
 	"encoding/json"
 	"io"
-	"log"
 	"net/http"
 	"strings"
 )
@@ -33,10 +32,9 @@ func (c *DiscordClient) SendInteraction(request *InteractionRequest) (error) {
 		return err
 	}
 	defer resp.Body.Close()
-	respBody, err := io.ReadAll(resp.Body)
+	_, err = io.ReadAll(resp.Body)
 	if err != nil {
 		return  err
 	}
-	log.Default().Printf("resp: %s\n, reqbody: %s \n, respbody: %s", resp.Status, string(reqBody), string(respBody))
 	return nil
 }

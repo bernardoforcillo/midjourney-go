@@ -54,3 +54,7 @@ Code refator, cleanup and documentation.
 ### Changed
 
 - added more time in the generation process for `Imagine` and `Upscale`
+## [0.1.3] - 2024-02-20
+
+Code improvement.
+

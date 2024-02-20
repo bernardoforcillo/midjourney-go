@@ -77,10 +77,9 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 	if err != nil {
 		return nil, err
 	}
-	time.Sleep(8 * time.Second)
 	if waitUntilGenerated {
+		time.Sleep(8 * time.Second)
 		var txtmessage string
-		time.Sleep(2 * time.Second)
 		for txtmessage != "fast" {
 			msx, err := c.SearchMesssageByPrompt(prompt)
 			if err != nil {
@@ -95,6 +94,7 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 			if len(matches) >= 3 {
 				txtmessage = matches[2]
 			}
+		time.Sleep(2 * time.Second)
 		}
 	}
 	result, err := c.SearchMesssageByPrompt(prompt)
