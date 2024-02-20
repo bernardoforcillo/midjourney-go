@@ -25,7 +25,7 @@ client := midjourney.NewMidjourneyClient("your token", "channel id")
 
 ### How to generate an image
 
-The `Imagine` command is used to generate an image. It takes two arguments: a string wich is the prompt for the image, and a boolean which force the execution to wait until the image is generated.
+The `Imagine` command is used to generate an image. It takes two arguments: a string that is the prompt for the image, and a boolean that force the execution to wait until the image is generated.
 
 ```go
 generatedImage, err := client.Imagine("prompt", waitUntilGenerated)
@@ -36,7 +36,7 @@ if err != nil {
 
 ### How to upscale an image
 
-The `Upscale` command is used to upscale an image. It takes two arguments: the index of the image to upscale, the index must be between 0 (included) and 4(excluded). and a boolean which force the execution to wait until the image is generated.
+The `Upscale` command is used to upscale an image. It takes two arguments: the index of the image to upscale, the index must be between 0 (included) and 4(excluded). and a boolean that force the execution to wait until the image is generated.
 
 ```go
 upscaledImage, err := generatedImage.Upscale(index, true)

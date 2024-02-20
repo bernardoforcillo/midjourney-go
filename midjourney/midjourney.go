@@ -77,6 +77,7 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 	if err != nil {
 		return nil, err
 	}
+	time.Sleep(8 * time.Second)
 	if waitUntilGenerated {
 		var txtmessage string
 		time.Sleep(2 * time.Second)
@@ -175,7 +176,7 @@ func (g *GeneratedImage) Upscale(index int, waitUntilGenerated bool) (*UpscaledI
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(3 * time.Second)
+		time.Sleep(5 * time.Second)
 	}
 	prompt := strings.Split(g.message.Content, "**")[1]
 	result, err := g.mj.SearchMesssageWithContent(fmt.Sprintf("**%s** - Image #%d", prompt, index+1))

@@ -46,3 +46,11 @@ Code refator, cleanup and documentation.
 ### Removed
 
 - Removed reimplementation of `hongliang5316`'s `upscale` and `imagine` APIs from `midjourney-go` (`upscale` and `imagine` are now part of `MidjourneyClient` API).
+
+## [0.1.2] - 2024-02-20
+
+Code refator, cleanup and documentation.
+
+### Changed
+
+- added more time in the generation process for `Imagine` and `Upscale`
