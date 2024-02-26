@@ -78,10 +78,11 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(4 * time.Second)
+		time.Sleep(16 * time.Second)
 		var txtmessage string
+		var result *discord.Message
 		for txtmessage != "fast" {
-			msx, err := c.SearchMesssageByPrompt(prompt)
+			result, err = c.SearchGeneratedMessage(prompt)
 			if err != nil {
 				return nil, err
 			}
@@ -90,28 +91,21 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 			if err != nil {
 				return nil, err
 			}
-			matches := regexpPattern.FindStringSubmatch(msx.Content)
+			matches := regexpPattern.FindStringSubmatch(result.Content)
 			if len(matches) >= 3 {
 				txtmessage = matches[2]
 			}
-		time.Sleep(2 * time.Second)
+			time.Sleep(4 * time.Second)
 		}
+		return &GeneratedImage{mj: c, message: *result}, nil
 	}
-	result, err := c.SearchMesssageByPrompt(prompt)
-	if err != nil {
-		return nil, err
-	}
-	generated := GeneratedImage{
-		mj: c,
-		message: result,
-	}
-	return &generated, nil
+	return nil, nil
 }
 
-func (c MidjourneyClient) SearchMesssageByPrompt(prompt string) (discord.Message, error) {
+func (c MidjourneyClient) SearchGeneratedMessage(prompt string) (*discord.Message, error) {
 	messages, err := c.client.Messages(c.channelID)
 	if err != nil {
-		return discord.Message{}, err
+		return nil, err
 	}
 	var split []string
 	var result discord.Message
@@ -126,26 +120,31 @@ func (c MidjourneyClient) SearchMesssageByPrompt(prompt string) (discord.Message
 			}
 		}
 	}
-	return result, nil
+	return &result, nil
 }
 
-func (c MidjourneyClient) SearchMesssageWithContent(content string) (discord.Message, error) {
+func (c MidjourneyClient) SearchUpscaledMessage(prompt string, image int) (*discord.Message, error) {
 	messages, err := c.client.Messages(c.channelID)
 	if err != nil {
-		return discord.Message{}, err
+		return nil, err
 	}
+	var matches []string
 	var result discord.Message
+	regex := regexp.MustCompile(fmt.Sprintf(`^\*\*%s --v\s+\d+(\.\d+)?\*\*\s*- Image #%d\s*<@\d+>$`, prompt, image))
 	for _, message := range *messages {
-		if strings.Contains(message.Content, content) {
-			result = message
-			break
+		if regex.MatchString(message.Content) {
+			matches = regex.FindStringSubmatch(message.Content)
+			if len(matches) == 2 {
+				result = message
+				break
+			}
 		}
 	}
-	return result, nil
+	return &result, nil
 }
 
 type GeneratedImage struct {
-	mj  *MidjourneyClient
+	mj      *MidjourneyClient
 	message discord.Message
 }
 
@@ -180,23 +179,30 @@ func (g *GeneratedImage) Upscale(index int, waitUntilGenerated bool) (*UpscaledI
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(4 * time.Second)
+		time.Sleep(8 * time.Second)
 	}
 	prompt := strings.Split(g.message.Content, "**")[1]
-	result, err := g.mj.SearchMesssageWithContent(fmt.Sprintf("**%s** - Image #%d", prompt, index+1))
+	regex := regexp.MustCompile(`\s*--v\s+\d+(\.\d+)?\s*`)
+	prompt = regex.ReplaceAllString(prompt, "")
+	fmt.Printf("prompt: \"%s\"\n", prompt)
+	result, err := g.mj.SearchUpscaledMessage(prompt, index + 1)
 	if err != nil {
 		return nil, err
 	}
 	upscaled := UpscaledImage{
-		mj:     g.mj,
-		message: result,
-	} 
+		mj:      g.mj,
+		message: *result,
+	}
 	return &upscaled, nil
 }
 
 type UpscaledImage struct {
-	mj *MidjourneyClient
+	mj      *MidjourneyClient
 	message discord.Message
+}
+
+func (u UpscaledImage) Message() discord.Message {
+	return u.message
 }
 
 func (u UpscaledImage) URL() string {
