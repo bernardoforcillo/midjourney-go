@@ -67,7 +67,7 @@ Fix search message by prompt
 
 - modified `SearchMesssageByPrompt` to search new version of the default prompt used by Midjourney
 
-## [0.1.5] - 2024-02-20
+## [0.1.5] - 2024-02-26
 
 Fix search messages by prompt
 
@@ -75,6 +75,18 @@ Fix search messages by prompt
 
 - modified `SearchMesssageByPrompt` into `SearchGeneratedMessage` and rewrited
 - modified `SearchMesssageWithContent` into `SearchUploadMessage` and rewrited
+
+## Changed
+
+- changed waiting time
+
+## [0.1.6] - 2024-02-27
+
+Fix search messages by prompt and upgraded go version
+
+### Fixed
+
+- fixed `SearchGeneratedMessage` to search prompt used by Midjourney in discord (rewrited with **regexp** pattern)
 
 ## Changed
 

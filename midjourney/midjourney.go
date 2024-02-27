@@ -78,7 +78,7 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(16 * time.Second)
+		time.Sleep(8 * time.Second)
 		var txtmessage string
 		var result *discord.Message
 		for txtmessage != "fast" {
@@ -86,14 +86,14 @@ func (c *MidjourneyClient) Imagine(prompt string, waitUntilGenerated bool) (*Gen
 			if err != nil {
 				return nil, err
 			}
-			regexPattern := `\*\*(.*?)\*\*.*?\((.*?)\)`
-			regexpPattern, err := regexp.Compile(regexPattern)
+			regexPattern := `^\*\*(.*) --v\s+\d+(\.\d+)?\*\*\s*-\s*<@\d+> \((.*?)\)$`
+			regex, err := regexp.Compile(regexPattern)
 			if err != nil {
 				return nil, err
 			}
-			matches := regexpPattern.FindStringSubmatch(result.Content)
-			if len(matches) >= 3 {
-				txtmessage = matches[2]
+			matches := regex.FindStringSubmatch(result.Content)
+			if regex.MatchString(result.Content) && len(matches) == 4 && matches[1] == prompt {
+				txtmessage = matches[3]
 			}
 			time.Sleep(4 * time.Second)
 		}
@@ -107,14 +107,14 @@ func (c MidjourneyClient) SearchGeneratedMessage(prompt string) (*discord.Messag
 	if err != nil {
 		return nil, err
 	}
-	var split []string
 	var result discord.Message
-	regex := regexp.MustCompile(`\s*--v\s+\d+(\.\d+)?\s*`)
+	regex := regexp.MustCompile(`^\*\*(.*) --v\s+\d+(\.\d+)?\*\*\s*-\s*<@\d+> \((.*?)\)$`)
+	currentTime := time.Now()
 	for _, message := range *messages {
-		split = strings.Split(message.Content, "**")
-		if len(split) == 3 {
-			output := regex.ReplaceAllString(split[1], "")
-			if output == prompt {
+		creationTime := message.Timestamp
+		if currentTime.Sub(creationTime) < 2*time.Minute && regex.MatchString(message.Content) {
+			matches := regex.FindStringSubmatch(message.Content)
+			if strings.Compare(strings.Trim(matches[1], " "), strings.Trim(prompt, " ")) == 0 {
 				result = message
 				break
 			}
@@ -179,12 +179,11 @@ func (g *GeneratedImage) Upscale(index int, waitUntilGenerated bool) (*UpscaledI
 		return nil, err
 	}
 	if waitUntilGenerated {
-		time.Sleep(8 * time.Second)
+		time.Sleep(4 * time.Second)
 	}
 	prompt := strings.Split(g.message.Content, "**")[1]
 	regex := regexp.MustCompile(`\s*--v\s+\d+(\.\d+)?\s*`)
 	prompt = regex.ReplaceAllString(prompt, "")
-	fmt.Printf("prompt: \"%s\"\n", prompt)
 	result, err := g.mj.SearchUpscaledMessage(prompt, index + 1)
 	if err != nil {
 		return nil, err
