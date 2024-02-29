@@ -3,6 +3,7 @@ package midjourney
 import (
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -130,11 +131,11 @@ func (c MidjourneyClient) SearchUpscaledMessage(prompt string, image int) (*disc
 	}
 	var matches []string
 	var result discord.Message
-	regex := regexp.MustCompile(fmt.Sprintf(`^\*\*%s --v\s+\d+(\.\d+)?\*\*\s*- Image #%d\s*<@\d+>$`, prompt, image))
+	regex := regexp.MustCompile(`^\*\*(.*) --v\s+\d+(\.\d+)?\*\*\s*- Image #(\d+) \s*<@\d+>$`)
 	for _, message := range *messages {
 		if regex.MatchString(message.Content) {
 			matches = regex.FindStringSubmatch(message.Content)
-			if len(matches) == 2 {
+			if strings.Compare(strings.Trim(matches[1], " "), strings.Trim(prompt, " ")) == 0 && matches[3] == strconv.Itoa(image) {
 				result = message
 				break
 			}
