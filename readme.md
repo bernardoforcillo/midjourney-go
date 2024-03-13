@@ -1,3 +1,5 @@
+> The development of the package was discontinued, see [mittelweg](https://github.com/bernardoforcillo/mittelweg) and [diskursus](https://github.com/bernardoforcillo/diskursus)
+
 # A Golang SDK for managing Midjourney through Discord API.
 
 The `midjourney-go` package provides a Golang SDK for managing Midjourney through Discord API. It is in development.
